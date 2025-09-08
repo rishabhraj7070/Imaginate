@@ -21,23 +21,29 @@
     color: var(--text-primary);
   }
   .container {
-    max-width: 700px;
+    max-width: 800px;
     margin: 3rem auto;
     padding: 0 1rem;
   }
   h1 {
     text-align: center;
     color: var(--purple1);
+    margin-bottom: 2rem;
   }
-  .scene-card {
+  .story-card {
     background: var(--card-bg);
     border-radius: 16px;
     box-shadow: 0 10px 30px var(--shadow-md);
     margin-bottom: 2rem;
     padding: 1.5rem;
   }
-  .scene-text {
-    font-size: 1.1rem;
+  .story-card img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+  .story-text {
+    font-size: 1.05rem;
     line-height: 1.6;
     text-align: justify;
   }
@@ -65,64 +71,59 @@
 </head>
 <body>
 <div class="container">
-  <h1>Your Generated Story</h1>
-  <div id="story-container">Loading story...</div>
+  <h1> Indian Army Stories</h1>
 
+  <!-- Story 1 -->
+  <div class="story-card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Siachen_Glacier_Indian_Army.jpg/640px-Siachen_Glacier_Indian_Army.jpg" alt="Indian Army on Glacier">
+    <h2>🪖 The Glacier Guard</h2>
+    <p class="story-text">
+      On the Siachen Glacier, the world’s highest battlefield, soldiers live in extreme cold. Snow covers everything, and the wind cuts like a knife. Still, the Indian Army stands strong.
+      <br><br>
+      Captain Aarav was one of them. He came from a small town in Bihar. The first time he saw the endless snow, he felt nervous, but he quickly remembered his training and his promise to the country.
+      <br><br>
+      Every day, he and his team walked on sharp ice, checking the border. At night, they sat inside small tents, sharing hot tea and telling stories of home. The soldiers laughed together, even in the toughest moments, because unity gave them strength.
+      <br><br>
+      One day, a villager needed urgent help in the valley below. Without thinking twice, Aarav and his team carried medicine through the snowstorm. The villagers called them heroes, but Aarav only smiled. For him, being a soldier was not about medals. It was about standing tall, protecting people, and loving the motherland.
+    </p>
+  </div>
+
+  <!-- Story 2 -->
+  <div class="story-card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Indian_Army_Helicopter_Rescue.jpg/640px-Indian_Army_Helicopter_Rescue.jpg" alt="Army Helicopter Rescue">
+    <h2>🚁 The Rescue Mission</h2>
+    <p class="story-text">
+      In Uttarakhand, heavy rains caused a big flood. Villages were cut off, and people were trapped on rooftops. The Indian Army was called for help.
+      <br><br>
+      Captain Meera led the mission with her helicopter team. Flying low over the raging river, she saw children waving for help. Without wasting a second, she gave orders: “Ropes down, let’s bring them home!”
+      <br><br>
+      Soldiers climbed down into dangerous waters, holding each other’s hands to save families. An old woman was too weak to walk, so a soldier carried her on his back. When the helicopter lifted into the sky, the rescued people cried tears of joy.
+      <br><br>
+      Meera and her team worked day and night, bringing food, water, and medicines. For them, it was not a battle with guns, but a battle against nature. At the end of the mission, a little boy gave Meera a small handmade flag and whispered, “Thank you, Didi.” She smiled and realized that true victory is saving lives.
+    </p>
+  </div>
+
+  <!-- Story 3 -->
+  <div class="story-card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Indian_Army_Soldier_Letters.jpg/640px-Indian_Army_Soldier_Letters.jpg" alt="Soldier Writing Letters">
+    <h2>📜 Letters from the Border</h2>
+    <p class="story-text">
+      At the desert border, Soldier Raghav had a habit. Every night, he wrote letters to his family. He told them about the clear night sky, the hot winds, and the courage of his team.
+      <br><br>
+      “Don’t worry,” he wrote to his younger sister, “I will come home soon.” For his parents, those letters were a ray of hope.
+      <br><br>
+      One week, the letters stopped. The family waited and prayed, afraid of bad news. But after a month, Raghav returned, safe and proud. He explained, “We had a secret mission, so I could not write. But I never forgot you.” His family cried with joy, holding him tightly.
+      <br><br>
+      Later, his sister collected all the letters and tied them with a ribbon. To her, they were not just words on paper, but treasures of love and sacrifice. The Indian Army protects the nation, but it also carries countless silent stories of families waiting, of letters written in the dark, and of love that never fades.
+    </p>
+  </div>
+
+  <!-- Bottom Buttons -->
   <div class="bottom-buttons">
-    <button id="download-pdf" type="button">⬇️ Download as PDF</button>
-    <a id="save-library" href="#">💾 Save to Library</a>
-    <a id="to-podcast" href="podcaste.html">🎙️ Turn it into Podcast</a>
+    <button type="button">⬇️ Download as PDF</button>
+    <a href="#">💾 Save to Library</a>
+    <a href="podcaste.html">🎙️ Turn it into Podcast</a>
   </div>
 </div>
-
-<script>
-const storyContainer = document.getElementById("story-container");
-const storyDataRaw = localStorage.getItem("storyData");
-
-if (!storyDataRaw) {
-  storyContainer.innerHTML = "<p>No story found. Please generate a story first.</p>";
-} else {
-  const storyData = JSON.parse(storyDataRaw);
-
-  async function generateStory() {
-    try {
-      const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=YOUR_API_KEY",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt: `Write a ${storyData.tone} ${storyData.genre} story for ${storyData.audience} with this idea: ${storyData.idea}`,
-            temperature: 0.7,
-            maxOutputTokens: 500
-          })
-        }
-      );
-
-      const data = await response.json();
-      const storyText = data.candidates?.[0]?.content?.[0]?.text || "Story could not be generated.";
-
-      storyContainer.innerHTML = `<div class="scene-card"><p class="scene-text">${storyText}</p></div>`;
-      localStorage.setItem("finalStory", storyText); // store for podcast or PDF
-    } catch (err) {
-      storyContainer.innerHTML = "<p>Failed to load story. Check your API key and network.</p>";
-      console.error(err);
-    }
-  }
-
-  generateStory();
-}
-
-// Download PDF button (redirect example)
-document.getElementById("download-pdf").addEventListener("click", () => {
-  // You can implement actual PDF generation here, for now redirect
-  window.location.href = "xyz.html";
-});
-
-// Save to Library
-document.getElementById("save-library").addEventListener("click", () => {
-  alert("Story saved to library (demo).");
-});
-</script>
 </body>
 </html>
